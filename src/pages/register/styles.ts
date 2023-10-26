@@ -19,15 +19,6 @@ export const FormContainer = styled('div', {
     padding: '2rem'
 })
 
-export const RegisterContainer = styled('div', {
-    display: 'flex',
-    alignItems: 'flex-end',
-
-    a: {
-        color: '#fff',
-        cursor: 'pointer'
-    }
-})
 
 export const Form = styled('form', {
     display: 'flex',

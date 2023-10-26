@@ -1,4 +1,4 @@
-import { Container, Form, FormContainer } from "./styles";
+import { Container, Form, FormContainer, RegisterContainer } from "./styles";
 
 export default function Login() {
   return (
@@ -18,6 +18,10 @@ export default function Login() {
           </div>
 
           <button>Entrar</button>
+
+          <RegisterContainer>
+            <a href="/register">Criar uma conta</a>
+          </RegisterContainer>
         </Form>
       </FormContainer>
     </Container>

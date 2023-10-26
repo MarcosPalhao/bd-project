@@ -33,7 +33,14 @@ export const Content = styled(Dialog.Content)`
             background: #121214;
             color: #7C7C8A;
             padding: 1rem;
+        }
 
+        select {
+            border-radius: 6px;
+            border: 0;
+            background: #121214;
+            color: #7C7C8A;
+            padding: 1rem;
         }
 
         button[type="submit"] {
@@ -58,4 +65,9 @@ export const CloseButton = styled(Dialog.Close)`
     right: 1.5rem;
     cursor: pointer;
     color: #7C7C8A;
+`;
+
+export const InputError = styled('div')`
+    margin-top: 1rem;
+    color: #F75A68;
 `;
