@@ -5,10 +5,25 @@ import logo from '../../assets/logo.png';
 import { ThumbsUp, CurrencyDollar } from "phosphor-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { NewTransactionModal } from "../../components/NewTransactionModal";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!session) {
+      router.push("/login")
+    }
+  }, [])
+  
+  if (!session) return <div>Loading...</div>
+
   return (
     <Container>
+      <button onClick={() => signOut()}>SignOut</button>
       <Header>
         <ImageContainer>
           <Image 
