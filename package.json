@@ -18,6 +18,7 @@
         "@types/react-dom": "18.2.7",
         "axios": "^1.5.1",
         "bcryptjs-react": "^2.4.6",
+        "einer-alerts": "^1.0.3",
         "eslint": "8.49.0",
         "eslint-config-next": "13.5.1",
         "jsonwebtoken": "^9.0.2",
