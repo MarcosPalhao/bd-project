@@ -1,4 +1,4 @@
-import { Container, Header, NewTransactionButton, ImageContainer, CardsContainer, Card, TotalCard, ListContainer, Expense, Income } from "./styles";
+import { Container, Header, NewTransactionButton, ImageContainer, CardsContainer, Card, TotalCard, ListContainer, Expense, Income, ButtonSignOut, ButtonHeaderContainer } from "./styles";
 import Image from "next/image";
 
 import logo from '../../assets/logo.png';
@@ -8,6 +8,8 @@ import { NewTransactionModal } from "../../components/NewTransactionModal";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { LoadingContainer } from "../login/styles";
+import loading from '../../assets/loading.gif';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -19,11 +21,18 @@ export default function Home() {
     }
   }, [])
   
-  if (!session) return <div>Loading...</div>
+  if (!session) 
+    return <LoadingContainer>
+      <Image 
+        src={loading} 
+        height={75}
+        quality={100} 
+        alt="Logo"  
+      /> 
+    </LoadingContainer>
 
   return (
     <Container>
-      <button onClick={() => signOut()}>SignOut</button>
       <Header>
         <ImageContainer>
           <Image 
@@ -35,13 +44,18 @@ export default function Home() {
           <h1>DespesaControl</h1>
         </ImageContainer>
 
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <NewTransactionButton>Nova transação</NewTransactionButton>
-          </Dialog.Trigger>
+    
+        <ButtonHeaderContainer>
+          <Dialog.Root>
+            <Dialog.Trigger asChild>
+              <NewTransactionButton>Nova transação</NewTransactionButton>
+            </Dialog.Trigger>
 
-          <NewTransactionModal />
-        </Dialog.Root>
+            <NewTransactionModal />
+          </Dialog.Root>
+
+          <ButtonSignOut onClick={() => signOut()}>Sair</ButtonSignOut>
+        </ButtonHeaderContainer>
       </Header>
 
       <CardsContainer>

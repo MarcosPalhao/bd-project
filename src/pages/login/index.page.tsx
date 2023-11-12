@@ -1,11 +1,13 @@
 import { useSession, signIn, signOut, getCsrfToken } from "next-auth/react"
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Container, Form, FormContainer, RegisterContainer } from "./styles";
+import { Container, Form, FormContainer, LoadingContainer, RegisterContainer } from "./styles";
 import bcrypt from "bcryptjs-react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import Image from "next/image";
+import loading from '../../assets/loading.gif';
 
 const loginUser = z.object({
   email: z.string().email(),
@@ -47,36 +49,44 @@ export default function Login({
     }
   }, [session])
 
-  if (status == "loading" || session) return <div>Loading...</div>
-
+  if (status == "loading" || session) 
+    return <LoadingContainer>
+      <Image 
+        src={loading} 
+        height={75}
+        quality={100} 
+        alt="Logo"  
+      /> 
+    </LoadingContainer>
+  
   return (
     <Container>
-      <h1>Entra em mim balazar :D</h1>
+      <h1>Entrar</h1>
       <FormContainer>
         <Form onSubmit={handleSubmit(handleLogin)}>
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
           
-          <label>
-            Email
-              <input 
+          <div>
+            <label>Email</label>
+            <input 
               type="email" 
               name="email"
               id="email"
               placeholder="Insira seu email" 
               {...register('email')}
             />
-          </label>
-
-          <label>
-            Senha
-              <input 
+          </div>
+      
+          <div>
+            <label>Senha</label>
+            <input 
               type="password"
               name="password"
               id="password"
               placeholder="Insira sua senha" 
               {...register('password')}
             />
-          </label>
+          </div>
           
 
           <button type="submit">Entrar</button>

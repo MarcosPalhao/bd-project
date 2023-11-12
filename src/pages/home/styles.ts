@@ -104,3 +104,17 @@ export const Expense = styled("p", {
 export const Income = styled("p", {
     color: '#00B37E'
 })
+
+export const ButtonSignOut = styled("button", {
+    border: '0',
+    background: 'none',
+    color: '#fff',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+})
+
+export const ButtonHeaderContainer = styled("div", {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem'
+});
