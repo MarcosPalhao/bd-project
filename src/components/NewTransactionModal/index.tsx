@@ -1,10 +1,17 @@
 import * as Dialog from '@radix-ui/react-dialog';
+import { GetServerSideProps } from "next";
 import { X } from 'phosphor-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { CloseButton, Content, InputError, Overlay } from "./styles";
+import { prisma } from '../../lib/prisma';
+import { Category } from '@prisma/client';
+
+interface CategoriesProps {
+    categories: Category[]
+}
 
 const createNewTransaction = z.object({
 	description: z.string(),
@@ -15,7 +22,9 @@ const createNewTransaction = z.object({
 
 type CreateNewTransaction = z.infer<typeof createNewTransaction>
 
-export function NewTransactionModal() {
+export function NewTransactionModal({categories}: CategoriesProps) {
+	console.log(categories);
+
 	const { 
 		register,
 		handleSubmit,
@@ -71,4 +80,21 @@ export function NewTransactionModal() {
             </Content>
         </Dialog.Portal>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    const categories = await prisma.category.findMany();
+
+    const data = categories.map(category => {
+        return {
+            id: category.id,
+            name: category.name,
+        }
+    })
+
+    return {
+        props: {
+            categories: data
+        }
+    }
 }

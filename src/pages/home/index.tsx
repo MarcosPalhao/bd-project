@@ -44,15 +44,10 @@ export default function Home() {
           <h1>DespesaControl</h1>
         </ImageContainer>
 
-    
         <ButtonHeaderContainer>
-          <Dialog.Root>
-            <Dialog.Trigger asChild>
-              <NewTransactionButton>Nova transação</NewTransactionButton>
-            </Dialog.Trigger>
-
-            <NewTransactionModal />
-          </Dialog.Root>
+          <a href="/expenses">
+            <NewTransactionButton>Nova transação</NewTransactionButton>
+          </a>
 
           <ButtonSignOut onClick={() => signOut()}>Sair</ButtonSignOut>
         </ButtonHeaderContainer>
