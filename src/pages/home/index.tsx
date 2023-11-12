@@ -1,4 +1,4 @@
-import { Container, Header, NewTransactionButton, ImageContainer, CardsContainer, Card, TotalCard, ListContainer, Expense, Income, ButtonSignOut, ButtonHeaderContainer } from "./styles";
+import { Container, Header, NewTransactionButton, ImageContainer, CardsContainer, Card, TotalCard, ListContainer, Expense, Income, ButtonSignOut, ButtonHeaderContainer, NewTransactionButtonIncomes, NewTransactionButtonCategory } from "./styles";
 import Image from "next/image";
 
 import logo from '../../assets/logo.png';
@@ -46,10 +46,18 @@ export default function Home() {
 
         <ButtonHeaderContainer>
           <a href="/expenses">
-            <NewTransactionButton>Nova transação</NewTransactionButton>
+            <NewTransactionButton>Nova Despesa</NewTransactionButton>
           </a>
 
-          <ButtonSignOut onClick={() => signOut()}>Sair</ButtonSignOut>
+          <a href="/incomes">
+            <NewTransactionButtonIncomes>Nova Receita</NewTransactionButtonIncomes>
+          </a>
+
+          <a href="/categories">
+            <NewTransactionButtonCategory>Nova Categoria</NewTransactionButtonCategory>
+          </a>
+
+          {/* <ButtonSignOut onClick={() => signOut()}>Sair</ButtonSignOut> */}
         </ButtonHeaderContainer>
       </Header>
 

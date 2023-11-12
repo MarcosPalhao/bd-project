@@ -16,7 +16,9 @@ model User {
   email    String
   password String
 
-  created_at DateTime @default(now())
+  created_at DateTime  @default(now())
+  Expense    Expense[]
+  Income     Income[]
 
   @@map("users")
 }
@@ -37,7 +39,9 @@ model Expense {
   description String
   price       Float
   category_id String
+  user_id     String
   category    Category @relation(fields: [category_id], references: [id])
+  user        User     @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
 
@@ -49,7 +53,9 @@ model Income {
   description String
   price       Float
   category_id String
+  user_id     String
   category    Category @relation(fields: [category_id], references: [id])
+  user        User     @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
 

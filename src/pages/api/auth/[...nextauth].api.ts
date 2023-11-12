@@ -2,8 +2,9 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider  from 'next-auth/providers/credentials';
 import { prisma } from '../../../lib/prisma';
 import bcrypt from 'bcryptjs-react';
+import jwt from "jsonwebtoken";
 
-export default NextAuth({
+export const AuthOptions: NextAuthOptions = {
     pages: {
         signIn: '/login',
         error: '/login', // Error code passed in query string as ?error=
@@ -43,4 +44,6 @@ export default NextAuth({
             }
         })
     ]
-});
+};
+
+export default NextAuth(AuthOptions);

@@ -8,40 +8,68 @@ import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { prisma } from "../../lib/prisma";
 import { Category } from "@prisma/client";
+import { useRouter } from "next/router";
+import { api } from "../../lib/axios";
+import { AxiosError } from "axios";
+import { useSession } from "next-auth/react";
 
 interface CategoriesProps {
     categories: Category[]
 }
 
+const numberSchema = z.preprocess(Number, z.number()); // converts string -> number and validates
+
 const createNewExpense = z.object({
 	description: z.string(),
-	price: z.number(),
-	type_transaction: z.string(),
+	price: numberSchema,
 	category_id: z.string()
 });
 
 type CreateNewExpense= z.infer<typeof createNewExpense>
 
 export default function Expenses({categories}: CategoriesProps) {
-    console.log(categories);
+    const router = useRouter()
+
+    function handleBackPage() {
+        router.back();
+    }
 
     const { 
 		register,
 		handleSubmit,
+        reset,
 		formState: { isSubmitting, errors }
 	} = useForm<CreateNewExpense>({
 		resolver: zodResolver(createNewExpense)
 	});
 
 	async function handleCreateNewExpense(data: CreateNewExpense) {
-		console.log(data);
+		try {
+            const response = await api.post('/expenses/create', {
+              description: data.description,
+              price: data.price,
+              category_id: data.category_id,
+            });
+      
+            reset();
+      
+            if (response.status == 201) {
+              console.log('despesa cadastrada');
+            }
+      
+        } catch (err) {
+            console.log(err)
+            if (err instanceof AxiosError && err?.response?.data?.message) {
+                console.log(err.response.data.message);
+            } 
+        }
 	}
 
     return (
         <Container>
             <Header>
                 <ButtonContainer>
-                    <ButtonBack><CaretLeft /> <span>Voltar</span></ButtonBack>
+                    <ButtonBack onClick={handleBackPage}><CaretLeft /> <span>Voltar</span></ButtonBack>
                 </ButtonContainer>
 
                 <Image 
@@ -63,6 +91,7 @@ export default function Expenses({categories}: CategoriesProps) {
                             required 
                             {...register('description')}
                         />
+
                         <input 
                             type="number" 
                             placeholder="Preço" 
@@ -70,15 +99,15 @@ export default function Expenses({categories}: CategoriesProps) {
                             {...register('price')}
                         />
 
-                        <select {...register('type_transaction')}>
-                            <option selected value="" disabled>Selecione o tipo da transação</option>
-                        </select>
-
                         <select {...register('category_id')}>
-                            <option selected value="" disabled>Selecione uma categoria</option>
+                            {categories.map((category) => {
+                                return (
+                                    <option key={category.id} value={category.id}>{category.name}</option>
+                                )
+                            })}
                         </select>
 
-                        <button type="submit" disabled={isSubmitting}>Cadastrar</button>
+                        <button type="submit">Cadastrar</button>
                     </form>
                 </Content>
             </ContentContainer>

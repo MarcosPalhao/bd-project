@@ -1,10 +1,13 @@
-import { ButtonBack, ButtonContainer, Container, Content, ContentContainer, Header } from "./styles";
+import { ButtonBack, ButtonContainer, Container, Content, ContentContainer, Header, Label } from "./styles";
 import Image from "next/image";
 import logo from '../../assets/logo.png';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { api } from "../../lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretLeft } from 'phosphor-react';
+import { AxiosError } from "axios";
+import { useRouter } from "next/router";
 
 const createNewCategory = z.object({
 	name: z.string()
@@ -13,23 +16,45 @@ const createNewCategory = z.object({
 type CreateNewCategory= z.infer<typeof createNewCategory>
 
 export default function Categories() {
+    const router = useRouter();
+
+    function handleBackPage() {
+        router.back();
+    }
+
     const { 
 		register,
 		handleSubmit,
+        reset,
 		formState: { isSubmitting, errors }
 	} = useForm<CreateNewCategory>({
 		resolver: zodResolver(createNewCategory)
 	});
 
 	async function handleCreateNewCategory(data: CreateNewCategory) {
-		console.log(data);
+		try {
+            const response = await api.post('/categories/create', {
+              name: data.name,
+            });
+      
+            reset();
+      
+            if (response.status == 201) {
+              console.log('categoria cadastrada');
+            }
+      
+        } catch (err) {
+            if (err instanceof AxiosError && err?.response?.data?.message) {
+                console.log(err.response.data.message);
+            } 
+        }
 	}
 
     return (
         <Container>
             <Header>
                 <ButtonContainer>
-                    <ButtonBack><CaretLeft /> <span>Voltar</span></ButtonBack>
+                    <ButtonBack onClick={handleBackPage}><CaretLeft /> <span>Voltar</span></ButtonBack>
                 </ButtonContainer>
 
                 <Image 
@@ -45,9 +70,10 @@ export default function Categories() {
             <ContentContainer>
                 <Content>
                     <form onSubmit={handleSubmit(handleCreateNewCategory)}>
+                        <Label>Nome da Categoria</Label>
                         <input 
                             type="text" 
-                            placeholder="Descrição" 
+                            placeholder="Nome da categoria" 
                             required 
                             {...register('name')}
                         />

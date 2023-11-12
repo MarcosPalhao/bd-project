@@ -29,10 +29,32 @@ export const NewTransactionButton = styled('button', {
     border: '0',
     borderRadius: '8px',
     fontWeight: '500',
+    background: '#F75A68',
+    color: '#fff',
+    fontSize: '1rem',
+    cursor: 'pointer'
+})
+
+export const NewTransactionButtonIncomes = styled('button', {
+    padding: '1rem',
+    border: '0',
+    borderRadius: '8px',
+    fontWeight: '500',
     background: '#00875F',
     color: '#fff',
     fontSize: '1rem',
-    cursor: 'pointer',
+    cursor: 'pointer'
+})
+
+export const NewTransactionButtonCategory= styled('button', {
+    padding: '1rem',
+    border: '0',
+    borderRadius: '8px',
+    fontWeight: '500',
+    background: '#323238',
+    color: '#fff',
+    fontSize: '1rem',
+    cursor: 'pointer'
 })
 
 export const CardsContainer = styled("div", {

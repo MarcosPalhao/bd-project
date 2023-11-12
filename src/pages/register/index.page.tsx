@@ -78,7 +78,7 @@ export default function Register() {
             />
           </div>
 
-          <button type="submit" disabled={isSubmitting}>Entrar</button>
+          <button type="submit" disabled={isSubmitting}>Criar</button>
         </Form>
       </FormContainer>
     </Container>

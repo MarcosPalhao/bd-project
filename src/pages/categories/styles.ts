@@ -79,3 +79,7 @@ export const Content = styled('div', {
 
 
 })
+
+export const Label = styled('label', {
+    fontSize: '1rem'
+})

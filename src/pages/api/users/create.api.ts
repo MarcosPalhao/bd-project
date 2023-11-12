@@ -24,14 +24,14 @@ export default async function handler(
     }
 
     if (!userExists) {
-        const user = await prisma.user.create({
-          data: {
-            name,
-            email,
-            password
-          }
-        })
-    
-        return res.status(201).json(user)
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password
+        }
+      })
+  
+      return res.status(201).json(user)
     }
 }
