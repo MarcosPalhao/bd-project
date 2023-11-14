@@ -1,17 +1,26 @@
-import { useSession, signIn, signOut, getCsrfToken } from "next-auth/react"
+import { useSession, signIn, signOut, getCsrfToken } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Container, Form, FormContainer, LoadingContainer, RegisterContainer } from "./styles";
+import {
+  Container,
+  Form,
+  FormContainer,
+  LoadingContainer,
+  RegisterContainer,
+} from "./styles";
 import bcrypt from "bcryptjs-react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import Image from "next/image";
-import loading from '../../assets/loading.gif';
+import loading from "../../assets/loading.gif";
 
 const loginUser = z.object({
   email: z.string().email(),
-  password: z.string()
+  password: z.string(),
 });
 
 type LoginUser = z.infer<typeof loginUser>;
@@ -21,70 +30,67 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       csrfToken: await getCsrfToken(context),
     },
-  }
+  };
 }
 
 export default function Login({
   csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { 
+  const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-    reset
+    reset,
   } = useForm();
 
   async function handleLogin(data: LoginUser) {
-    console.log("info:", data)
-    signIn("credentials", data)
+    console.log("info:", data);
+    signIn("credentials", data);
   }
 
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
   console.log(session);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     if (session) {
-      router.push("/")
+      router.push("/");
     }
-  }, [session])
+  }, [session]);
 
-  if (status == "loading" || session) 
-    return <LoadingContainer>
-      <Image 
-        src={loading} 
-        height={75}
-        quality={100} 
-        alt="Logo"  
-      /> 
-    </LoadingContainer>
-  
+  if (status == "loading" || session)
+    return (
+      <LoadingContainer>
+        <Image src={loading} height={75} quality={100} alt="Logo" />
+      </LoadingContainer>
+    );
+
   return (
     <Container>
-      <h1>Entrar</h1>
+      <h1>Login</h1>
       <FormContainer>
         <Form onSubmit={handleSubmit(handleLogin)}>
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-          
+
           <div>
             <label>Email</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               name="email"
               id="email"
-              placeholder="Insira seu email" 
-              {...register('email')}
+              placeholder="Insira seu email"
+              {...register("email")}
             />
           </div>
-      
+
           <div>
             <label>Senha</label>
-            <input 
+            <input
               type="password"
               name="password"
               id="password"
-              placeholder="Insira sua senha" 
-              {...register('password')}
+              placeholder="Insira sua senha"
+              {...register("password")}
             />
           </div>
 
@@ -95,5 +101,5 @@ export default function Login({
         <a href="/register">Criar uma conta</a>
       </RegisterContainer>
     </Container>
-  )
+  );
 }

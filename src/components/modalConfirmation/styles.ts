@@ -5,19 +5,19 @@ export const ButtonConfirm = styled(Button, {
   padding: "0.3rem 0.8rem",
   fontWeight: "bold",
   color: "$green",
-  backgroundColor: "transparent",
   borderRadius: "6px",
   cursor: "pointer",
   fontSize: "0.675rem",
+  backgroundColor: "#00b37e!important",
 });
 
 export const ButtonCancel = styled(Button, {
   padding: "0.3rem 0.8rem",
   fontWeight: "bold",
-  color: "$red",
   borderRadius: "6px",
   cursor: "pointer",
   fontSize: "0.675rem",
+  color: "white !important",
 });
 export const Delete = styled("button", {
   background: "transparent",
@@ -26,5 +26,6 @@ export const Delete = styled("button", {
   alignItems: "center",
   gap: "0.2rem",
   cursor: "pointer",
-  color: "#f75a68",
+  color: "#c4424e",
+  transition: "all 0.1s ease 0s",
 });

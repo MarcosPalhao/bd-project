@@ -31,6 +31,7 @@ import { ModalConfirmation } from "../../components/modalConfirmation";
 import { AxiosError } from "axios";
 import { api } from "../../lib/axios";
 import { useAlert } from "einer-alerts";
+import { SignOut } from "phosphor-react";
 
 interface Props {
   incomes: Income[];
@@ -151,7 +152,9 @@ export default function Home({ incomes, expenses }: Props) {
             </NewTransactionButtonCategory>
           </a>
 
-          <ButtonSignOut onClick={() => signOut()}>Sair</ButtonSignOut>
+          <ButtonSignOut onClick={() => signOut()}>
+            <SignOut size={30} />
+          </ButtonSignOut>
         </ButtonHeaderContainer>
       </Header>
 

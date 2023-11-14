@@ -74,7 +74,7 @@ export default function Categories() {
       <Header>
         <ButtonContainer>
           <ButtonBack onClick={handleBackPage}>
-            <CaretLeft /> <span>Voltar</span>
+            <CaretLeft size={35} />
           </ButtonBack>
         </ButtonContainer>
 

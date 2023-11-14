@@ -6,6 +6,7 @@ import { api } from "../../lib/axios";
 import bcrypt from "bcryptjs-react";
 import { AxiosError } from "axios";
 import { useAlert } from "einer-alerts";
+import { useRouter } from "next/router";
 
 const createNewUser = z.object({
   name: z.string(),
@@ -17,6 +18,7 @@ type CreateNewUser = z.infer<typeof createNewUser>;
 
 export default function Register() {
   const trigger = useAlert();
+  const router = useRouter();
 
   const fireAlert = () => {
     trigger({
@@ -48,6 +50,7 @@ export default function Register() {
 
       if (response.status == 201) {
         fireAlert();
+        router.push("/login");
       }
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
