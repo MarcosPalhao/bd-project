@@ -1,17 +1,24 @@
-import { Container, Header, NewTransactionButton, ImageContainer, CardsContainer, Card, TotalCard, ListContainer, Expense, Income, ButtonSignOut, ButtonHeaderContainer, NewTransactionButtonIncomes, NewTransactionButtonCategory } from "./styles";
+import { Container, Header, NewTransactionButton, ImageContainer, CardsContainer, Card, TotalCard, ListContainer, Expense as Expenses, Income as Incomes, ButtonSignOut, ButtonHeaderContainer, NewTransactionButtonIncomes, NewTransactionButtonCategory } from "./styles";
 import Image from "next/image";
 
 import logo from '../../assets/logo.png';
 import { ThumbsUp, CurrencyDollar } from "phosphor-react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { NewTransactionModal } from "../../components/NewTransactionModal";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { LoadingContainer } from "../login/styles";
 import loading from '../../assets/loading.gif';
+import { prisma } from "../../lib/prisma";
+import { GetServerSideProps } from "next";
+import { Expense, Income } from "@prisma/client";
+import { NumberFormat } from "../../utils/numberFormat";
 
-export default function Home() {
+interface IncomesProps {
+  incomes: Income[];
+  expenses: Expense[];
+}
+
+export default function Home({incomes, expenses}: IncomesProps) {
   const { data: session } = useSession();
   const router = useRouter()
 
@@ -20,6 +27,28 @@ export default function Home() {
       router.push("/login")
     }
   }, [])
+  
+  const countTotalIncomes = () => {
+    let totalEntries = 0;
+    for (let index = 0; index < incomes.length; index++) {
+      totalEntries += incomes[index].price;
+    }
+    return totalEntries;
+  };
+
+  const countTotalExpenses = () => {
+    let totalExpenses = 0;
+    for (let index = 0; index < expenses.length; index++) {
+      totalExpenses += expenses[index].price;
+    }
+    return totalExpenses;
+  };
+
+  const countTotalNetWorth = () => {
+    let totalNetWorth = 0;
+    totalNetWorth += countTotalIncomes() - countTotalExpenses();
+    return totalNetWorth;
+  };
   
   if (!session) 
     return <LoadingContainer>
@@ -64,35 +93,90 @@ export default function Home() {
       <CardsContainer>
         <Card>
           <div>Entradas <ThumbsUp color="#00B37E" size={25} /></div>
-          <h1>R$ 17.758,00</h1>
+          <h1>{NumberFormat.format(countTotalIncomes())}</h1>
         </Card>
 
         <Card>
           <div>Saídas <ThumbsUp color="#F75A68" size={25} /></div>
-          <h1>R$ 5.758,00</h1>
+          <h1>{NumberFormat.format(countTotalExpenses())}</h1>
         </Card>
 
         <TotalCard>
           <div>Total <CurrencyDollar color="#fff" size={25} /></div>
-          <h1>R$ 5.758,00</h1>
+          <h1>{NumberFormat.format(countTotalNetWorth())}</h1>
         </TotalCard>
       </CardsContainer>
 
       <ListContainer>
-        <div>
-          <h2>Desenvolvimento de software</h2>
-          <Expense>12.000</Expense>
-          <p>Educação</p>
-          <p>26/10/2023</p>
-        </div>
 
-        <div>
-          <h2>Desenvolvimento de software</h2>
-          <Income>12.000</Income>
-          <p>Educação</p>
-          <p>26/10/2023</p>
-        </div>
+        {expenses.map((expense) => {
+          return (
+            <div key={expense.id}>
+              <div><h2>{expense.description}</h2></div>
+              <div><Incomes>{NumberFormat.format(expense.price)}</Incomes></div>
+              <div><p>Educação</p></div>
+              <div><p>{expense.created_at}</p></div>
+            </div>
+          );
+        })}
+
+        {incomes.map((incomes) => {
+          return (
+            <div key={incomes.id}>
+              <div><h2>{incomes.description}</h2></div>
+              <div><Incomes>{NumberFormat.format(incomes.price)}</Incomes></div>
+              <div><p>Educação</p></div>
+              <div><p>{incomes.created_at}</p></div>
+            </div>
+          );
+        })}
+
       </ListContainer>
     </Container>
   )
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  const userExists = await prisma.user.findFirst({
+    where: { email: session.user.email }
+  });
+
+  const incomes = await prisma.income.findMany({
+    where: {
+      user_id: userExists.id
+    },
+  });
+
+  const expenses = await prisma.expense.findMany({
+    where: {
+      user_id: userExists.id
+    }
+  });
+
+  const dataExpenses = expenses.map((expense) => {
+    return {
+      id: expense.id,
+      description: expense.description,
+      price: expense.price,
+      created_at: expense.created_at
+    }
+  })
+
+  const data = incomes.map((income) => {
+    return {
+      id: income.id,
+      description: income.description,
+      price: income.price,
+      created_at: income.created_at
+    };
+  });
+
+  return {
+    props: {
+      incomes: data,
+      expenses: dataExpenses
+    },
+  };
+};

@@ -113,6 +113,11 @@ export const ListContainer = styled("div", {
         background: '#29292E',
         borderRadius: '8px',
 
+        div: {
+            flexBasis: '25%',
+            padding: '0',
+        },
+
         h2: {
             fontSize: '1.1rem',
         }

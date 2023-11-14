@@ -26,13 +26,17 @@ export default async function handler(
   });
 
   const { description, price, category_id } = req.body;
+  let date = `${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`;
 
-  const expense = await prisma.income.create({
+  console.log(date);
+
+  const expense = await prisma.income.create({  
     data: {
       description,
       price,
       category_id,
-      user_id: userExists.id
+      user_id: userExists.id,
+      created_at: date
     }
   })
 

@@ -43,7 +43,7 @@ model Expense {
   category    Category @relation(fields: [category_id], references: [id])
   user        User     @relation(fields: [user_id], references: [id])
 
-  created_at DateTime @default(now())
+  created_at String
 
   @@map("expenses")
 }
@@ -57,7 +57,7 @@ model Income {
   category    Category @relation(fields: [category_id], references: [id])
   user        User     @relation(fields: [user_id], references: [id])
 
-  created_at DateTime @default(now())
+  created_at String
 
   @@map("incomes")
 }
