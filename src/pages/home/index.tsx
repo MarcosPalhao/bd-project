@@ -27,6 +27,10 @@ import { prisma } from "../../lib/prisma";
 import { GetServerSideProps } from "next";
 import { Expense, Income } from "@prisma/client";
 import { NumberFormat } from "../../utils/numberFormat";
+import { ModalConfirmation } from "../../components/modalConfirmation";
+import { AxiosError } from "axios";
+import { api } from "../../lib/axios";
+import { useAlert } from "einer-alerts";
 
 interface Props {
   incomes: Income[];
@@ -42,6 +46,26 @@ export default function Home({ incomes, expenses }: Props) {
       router.push("/login");
     }
   }, []);
+
+  const trigger = useAlert();
+
+  const expenseDeleteFireAlert = () => {
+    trigger({
+      text: "Deletado com sucesso!",
+      title: "Despesa",
+      type: "Success",
+      duration: 3000,
+    });
+  };
+
+  const incomeDeleteFireAlert = () => {
+    trigger({
+      text: "Deletado com sucesso!",
+      title: "Receita",
+      type: "Success",
+      duration: 3000,
+    });
+  };
 
   const countTotalIncomes = () => {
     let totalEntries = 0;
@@ -65,6 +89,36 @@ export default function Home({ incomes, expenses }: Props) {
     return totalNetWorth;
   };
 
+  async function handleDeleteExpense(expenseId: string) {
+    try {
+      const response = await api.delete(`/expenses/${expenseId}/delete`);
+
+      await router.reload();
+
+      if (response.status == 200) {
+        expenseDeleteFireAlert();
+      }
+    } catch (err) {
+      if (err instanceof AxiosError && err?.response?.data?.message) {
+        throw new Error(err.message);
+      }
+    }
+  }
+  async function handleDeleteIncome(incomeId: string) {
+    try {
+      const response = await api.delete(`/incomes/${incomeId}/delete`);
+
+      await router.reload();
+
+      if (response.status == 200) {
+        incomeDeleteFireAlert();
+      }
+    } catch (err) {
+      if (err instanceof AxiosError && err?.response?.data?.message) {
+        throw new Error(err.message);
+      }
+    }
+  }
   if (!session)
     return (
       <LoadingContainer>
@@ -140,6 +194,11 @@ export default function Home({ incomes, expenses }: Props) {
               <div>
                 <p>{expense.created_at}</p>
               </div>
+              <div>
+                <ModalConfirmation
+                  deleteFunction={() => handleDeleteExpense(expense.id)}
+                />
+              </div>
             </div>
           );
         })}
@@ -158,6 +217,11 @@ export default function Home({ incomes, expenses }: Props) {
               </div>
               <div>
                 <p>{incomes.created_at}</p>
+              </div>
+              <div>
+                <ModalConfirmation
+                  deleteFunction={() => handleDeleteIncome(incomes.id)}
+                />
               </div>
             </div>
           );
