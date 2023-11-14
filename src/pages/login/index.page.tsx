@@ -87,7 +87,6 @@ export default function Login({
               {...register('password')}
             />
           </div>
-          
 
           <button type="submit">Entrar</button>
         </Form>

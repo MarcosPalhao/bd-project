@@ -86,7 +86,7 @@ export default function Home({incomes, expenses}: IncomesProps) {
             <NewTransactionButtonCategory>Nova Categoria</NewTransactionButtonCategory>
           </a>
 
-          {/* <ButtonSignOut onClick={() => signOut()}>Sair</ButtonSignOut> */}
+          <ButtonSignOut onClick={() => signOut()}>Sair</ButtonSignOut>
         </ButtonHeaderContainer>
       </Header>
 
@@ -108,12 +108,11 @@ export default function Home({incomes, expenses}: IncomesProps) {
       </CardsContainer>
 
       <ListContainer>
-
         {expenses.map((expense) => {
           return (
             <div key={expense.id}>
               <div><h2>{expense.description}</h2></div>
-              <div><Incomes>{NumberFormat.format(expense.price)}</Incomes></div>
+              <div><Expenses>{NumberFormat.format(expense.price)}</Expenses></div>
               <div><p>Educação</p></div>
               <div><p>{expense.created_at}</p></div>
             </div>
@@ -130,7 +129,6 @@ export default function Home({incomes, expenses}: IncomesProps) {
             </div>
           );
         })}
-
       </ListContainer>
     </Container>
   )
@@ -138,6 +136,12 @@ export default function Home({incomes, expenses}: IncomesProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
+
+  if (!session) {
+    return {
+      props: {}
+    }
+  }
 
   const userExists = await prisma.user.findFirst({
     where: { email: session.user.email }

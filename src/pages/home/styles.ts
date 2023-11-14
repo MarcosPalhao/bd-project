@@ -103,6 +103,7 @@ export const ListContainer = styled("div", {
     display: 'flex',
     flexDirection: 'column',
     paddingTop: '3rem',
+    paddingBottom: '3rem',
     gap: '0.7rem',
 
     div: {
