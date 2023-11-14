@@ -16,9 +16,10 @@ model User {
   email    String
   password String
 
-  created_at DateTime  @default(now())
+  created_at DateTime   @default(now())
   Expense    Expense[]
   Income     Income[]
+  Category   Category[]
 
   @@map("users")
 }
@@ -28,20 +29,24 @@ model Category {
   name    String
   Expense Expense[]
   Income  Income[]
+  user_id String
 
   created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
 
   @@map("categories")
 }
 
 model Expense {
-  id          String   @id @default(uuid())
-  description String
-  price       Float
-  category_id String
-  user_id     String
-  category    Category @relation(fields: [category_id], references: [id])
-  user        User     @relation(fields: [user_id], references: [id])
+  id            String @id @default(uuid())
+  description   String
+  price         Float
+  category_id   String
+  user_id       String
+  category_name String
+
+  category Category @relation(fields: [category_id], references: [id])
+  user     User     @relation(fields: [user_id], references: [id])
 
   created_at String
 
@@ -49,13 +54,15 @@ model Expense {
 }
 
 model Income {
-  id          String   @id @default(uuid())
-  description String
-  price       Float
-  category_id String
-  user_id     String
-  category    Category @relation(fields: [category_id], references: [id])
-  user        User     @relation(fields: [user_id], references: [id])
+  id            String @id @default(uuid())
+  description   String
+  price         Float
+  category_id   String
+  user_id       String
+  category_name String
+
+  category Category @relation(fields: [category_id], references: [id])
+  user     User     @relation(fields: [user_id], references: [id])
 
   created_at String
 

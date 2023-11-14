@@ -18,7 +18,7 @@ import { Category } from "@prisma/client";
 import { useRouter } from "next/router";
 import { api } from "../../lib/axios";
 import { AxiosError } from "axios";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useAlert } from "einer-alerts";
 
 interface CategoriesProps {
@@ -130,9 +130,24 @@ export default function Expenses({ categories }: CategoriesProps) {
     </Container>
   );
 }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const categories = await prisma.category.findMany();
+  if (!session) {
+    return {
+      props: {},
+    };
+  }
+
+  const userExists = await prisma.user.findFirst({
+    where: { email: session.user.email },
+  });
+
+  const categories = await prisma.category.findMany({
+    where: {
+      user_id: userExists?.id,
+    },
+  });
 
   const data = categories.map((category) => {
     return {
