@@ -17,7 +17,7 @@ import {
 import Image from "next/image";
 
 import logo from "../../assets/logo.png";
-import { ThumbsUp, CurrencyDollar } from "phosphor-react";
+import { ThumbsUp, CurrencyDollar, ThumbsDown } from "phosphor-react";
 import { useSession, signOut, getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -168,7 +168,7 @@ export default function Home({ incomes, expenses }: Props) {
 
         <Card>
           <div>
-            Saídas <ThumbsUp color="#F75A68" size={25} />
+            Saídas <ThumbsDown color="#F75A68" size={25} />
           </div>
           <h1>{NumberFormat.format(countTotalExpenses())}</h1>
         </Card>

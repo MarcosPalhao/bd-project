@@ -86,11 +86,15 @@ export const Card = styled("div", {
 
   div: {
     fontSize: "1.2rem",
-    color: "#C4C4CC",
+    color: "white",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    fontWeight: "bold"
   },
+  h1: {
+    fontSize: "1.4rem"
+  }
 });
 
 export const TotalCard = styled("div", {
@@ -104,11 +108,15 @@ export const TotalCard = styled("div", {
 
   div: {
     fontSize: "1.2rem",
-    color: "#C4C4CC",
+    color: "white",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    fontWeight: "bold"
   },
+  h1: {
+    fontSize: "1.4rem"
+  }
 });
 
 export const ListContainer = styled("div", {
