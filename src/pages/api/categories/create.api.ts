@@ -30,6 +30,7 @@ export default async function handler(
   const categoryExists = await prisma.category.findFirst({
     where: {
       name,
+      user_id: userExists.id
     },
   });
 
