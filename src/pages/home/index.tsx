@@ -84,6 +84,72 @@ export default function Home({ incomes, expenses }: Props) {
     return totalExpenses;
   };
 
+  const countMedia = () => {
+    let totalExpenses = 0;
+    let media = 0;
+    for (let index = 0; index < expenses.length; index++) {
+      totalExpenses += expenses[index].price;
+    }
+    media = totalExpenses / expenses.length;
+    console.log(media);
+    return media;
+  };
+
+  const countMediana = () => {
+    let mediana = 0;
+    let tamanho = expenses.length;
+    let values = [];
+    expenses.forEach((element) => {
+      values.push(element.price);
+    });
+    let arraySorted = values.sort();
+
+    if (tamanho % 2 == 0) {
+      tamanho = tamanho / 2;
+      mediana = (arraySorted[tamanho - 1] + arraySorted[tamanho]) / 2;
+    } else {
+      tamanho = (tamanho + 1) / 2;
+      mediana = arraySorted[tamanho - 1];
+    }
+    return mediana;
+  };
+
+  const adjustArray = () => {
+    let values = [];
+    expenses.forEach((element) => {
+      values.push(element.price);
+    });
+    console.log(values + "valor array");
+    return values;
+  };
+  console.log(adjustArray());
+
+  function findMode(array) {
+    // Verificar se o array está vazio
+    if (array.length === 0) {
+      return null; // Retorna null se o array estiver vazio
+    }
+    var contagem = {};
+    array.forEach(function (elemento) {
+      if (contagem[elemento] === undefined) {
+        contagem[elemento] = 1;
+      } else {
+        contagem[elemento]++;
+      }
+    });
+
+    var valorMaisRepetido;
+    var contagemMaxima = 0;
+
+    for (var elemento in contagem) {
+      if (contagem[elemento] > contagemMaxima) {
+        contagemMaxima = contagem[elemento];
+        valorMaisRepetido = elemento;
+      }
+    }
+    console.log(valorMaisRepetido + "Valor esperado");
+    return valorMaisRepetido;
+  }
   const countTotalNetWorth = () => {
     let totalNetWorth = 0;
     totalNetWorth += countTotalIncomes() - countTotalExpenses();
@@ -164,6 +230,9 @@ export default function Home({ incomes, expenses }: Props) {
             Entradas <ThumbsUp color="#00B37E" size={25} />
           </div>
           <h1>{NumberFormat.format(countTotalIncomes())}</h1>
+          <h1>{countMedia().toFixed(2)}</h1>
+          <h1>{countMediana()}</h1>
+          <h1>{findMode(adjustArray())}</h1>
         </Card>
 
         <Card>
